@@ -1,6 +1,7 @@
 package cn.linzs.app.common.utils;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.apache.commons.lang3.time.DateUtils;
@@ -24,7 +25,7 @@ public final class JwtUtil {
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(new Date())
-                .setExpiration(DateUtils.addMinutes(new Date(), 30))
+                .setExpiration(DateUtils.addMinutes(new Date(), 1))
                 .signWith(SignatureAlgorithm.HS512, secret)
                 .compact();
     }
@@ -36,6 +37,9 @@ public final class JwtUtil {
                         .setSigningKey(secret)
                         .parseClaimsJws(token)
                         .getBody();
+        } catch (ExpiredJwtException e) {
+            logger.error("Get claims from token error. error information: " + e.getLocalizedMessage());
+            throw e;
         } catch (Exception e) {
             logger.error("Get claims from token error. error information: " + e.getLocalizedMessage());
         }

@@ -70,6 +70,10 @@ public class ReturnResult {
 
     }
 
+    public final static class BusinessCode {
+        public final static int REDIRECT_TO_LOGIN_PAGE = 10000; // 重定向到登录页
+    }
+
     private int code;
     private Object data;
 

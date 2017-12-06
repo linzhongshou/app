@@ -27,6 +27,7 @@
 		<jjwt.version>0.9.0</jjwt.version>
 		<guava.version>22.0</guava.version>
 		<commons-lang3.version>3.7</commons-lang3.version>
+		<fastjson.version>1.2.41</fastjson.version>
 	</properties>
 
 	<dependencies>
@@ -73,6 +74,12 @@
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
 			<version>${commons-lang3.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>${fastjson.version}</version>
 		</dependency>
 
 	</dependencies>

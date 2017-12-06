@@ -10,7 +10,7 @@ import java.io.IOException;
 /**
  * @Author linzs
  * @Date 2017-12-05 15:04
- * @Description
+ * @Description 跨域过滤器
  */
 @WebFilter(filterName = "corsFilter", urlPatterns = "/*")
 @Order(0)

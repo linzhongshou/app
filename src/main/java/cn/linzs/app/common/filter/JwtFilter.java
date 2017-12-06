@@ -17,7 +17,7 @@ import java.io.PrintWriter;
 /**
  * @Author linzs
  * @Date 2017-12-04 9:32
- * @Description
+ * @Description 判断JWT Token，如果不对将重定向到登录页面
  */
 @WebFilter(filterName = "jwtFilter", urlPatterns = "/api/*")
 @Order(1)

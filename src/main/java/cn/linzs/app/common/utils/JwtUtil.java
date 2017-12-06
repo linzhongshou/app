@@ -20,12 +20,13 @@ public final class JwtUtil {
     private final static Logger logger = Logger.getLogger(JwtUtil.class);
 
     private final static String secret = "JLKjslkdf92302=234kadf";
+    private final static int TOKEN_TIMEOUT = 30; // Token超时时间，默认30分钟
 
     public static String generateToken(Map<String, Object> claims) {
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(new Date())
-                .setExpiration(DateUtils.addMinutes(new Date(), 1))
+                .setExpiration(DateUtils.addMinutes(new Date(), TOKEN_TIMEOUT))
                 .signWith(SignatureAlgorithm.HS512, secret)
                 .compact();
     }

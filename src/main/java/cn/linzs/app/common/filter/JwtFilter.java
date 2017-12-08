@@ -33,12 +33,16 @@ public class JwtFilter implements Filter {
         final HttpServletRequest request = (HttpServletRequest) servletRequest;
         final HttpServletResponse response = (HttpServletResponse) servletResponse;
 
+        // 预检的请求直接跳过
+        if(request.getMethod().equals("OPTIONS")) {
+            response.setStatus(200);
+            return ;
+        }
+
         final String authHeader = request.getHeader("Authorization");
         if(authHeader == null) {
             // 没有Token，重定向到登录页面
-            PrintWriter writer = response.getWriter();
-            writer.print(JSON.toJSONString(new ReturnResult(ReturnResult.BusinessCode.REDIRECT_TO_LOGIN_PAGE, null)));
-            writer.flush();
+            response.setStatus(ReturnResult.HttpCode._401);
             return ;
         }
 
@@ -48,9 +52,7 @@ public class JwtFilter implements Filter {
             request.setAttribute("claims", claims);
         } catch (ExpiredJwtException e) {
             // Token过期，重定向到登录页面
-            PrintWriter writer = response.getWriter();
-            writer.print(JSON.toJSONString(new ReturnResult(ReturnResult.BusinessCode.REDIRECT_TO_LOGIN_PAGE, null)));
-            writer.flush();
+            response.setStatus(ReturnResult.HttpCode._401);
             return ;
         } catch (Exception e) {
             throw new ServletException("Invalid token.");

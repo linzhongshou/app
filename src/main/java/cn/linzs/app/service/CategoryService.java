@@ -3,10 +3,12 @@ package cn.linzs.app.service;
 import cn.linzs.app.domain.Category;
 import cn.linzs.app.repo.ICategoryRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.List;
 
 /**
  * @Author linzs
@@ -20,8 +22,9 @@ public class CategoryService {
     @Autowired
     private ICategoryRepo categoryRepo;
 
-    public List<Category> page() {
-        return (List<Category>) categoryRepo.findAll();
+    public Page<Category> findByPage(int currPage, int pageSize) {
+        Pageable pageable = new PageRequest(currPage, pageSize);
+        return categoryRepo.findAll(pageable);
     }
 
 }

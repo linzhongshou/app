@@ -3,8 +3,10 @@ package cn.linzs.app.controller;
 import cn.linzs.app.domain.Category;
 import cn.linzs.app.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -22,8 +24,9 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
-    @RequestMapping("/")
-    public List<Category> page() {
-        return categoryService.page();
+    @RequestMapping("/categorys")
+    public Page<Category> findByPage(@RequestParam(name = "currPage", defaultValue = "0") int currPage,
+                               @RequestParam(name = "pageSize", defaultValue = "10") int pageSize) {
+        return categoryService.findByPage(currPage, pageSize);
     }
 }

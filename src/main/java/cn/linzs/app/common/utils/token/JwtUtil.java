@@ -1,10 +1,9 @@
-package cn.linzs.app.common.utils;
+package cn.linzs.app.common.utils.token;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.apache.commons.lang3.time.DateUtils;
 import org.apache.log4j.Logger;
 
 import java.util.Date;
@@ -26,7 +25,7 @@ public final class JwtUtil {
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(new Date())
-                .setExpiration(DateUtils.addMinutes(new Date(), TOKEN_TIMEOUT))
+//                .setExpiration(DateUtils.addMinutes(new Date(), TOKEN_TIMEOUT))
                 .signWith(SignatureAlgorithm.HS512, secret)
                 .compact();
     }

@@ -1,10 +1,13 @@
 package cn.linzs.app.common.filter;
 
 import cn.linzs.app.common.dto.ReturnResult;
-import cn.linzs.app.common.utils.JwtUtil;
-import com.alibaba.fastjson.JSON;
+import cn.linzs.app.common.exception.ExpiredTokenException;
+import cn.linzs.app.common.utils.token.ITokenManager;
+import cn.linzs.app.common.utils.token.JwtUtil;
+import cn.linzs.app.common.utils.token.model.TokenModel;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 
 import javax.servlet.*;
@@ -12,7 +15,6 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 
 /**
  * @Author linzs
@@ -22,6 +24,9 @@ import java.io.PrintWriter;
 @WebFilter(filterName = "jwtFilter", urlPatterns = "/api/*")
 @Order(1)
 public class JwtFilter implements Filter {
+
+    @Autowired
+    ITokenManager tokenManager;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -48,9 +53,10 @@ public class JwtFilter implements Filter {
 
         final String token = authHeader;
         try {
-            final Claims claims = JwtUtil.getClaimsFromToken(token);
-            request.setAttribute("claims", claims);
-        } catch (ExpiredJwtException e) {
+            tokenManager.refreshToken(token);
+            final TokenModel tokenModel = tokenManager.getTokenModel(token);
+            request.setAttribute("tokenModel", tokenModel);
+        } catch (ExpiredTokenException e) {
             // Token过期，重定向到登录页面
             response.setStatus(ReturnResult.HttpCode._401);
             return ;

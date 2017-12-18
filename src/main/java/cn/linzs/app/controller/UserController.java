@@ -1,15 +1,14 @@
 package cn.linzs.app.controller;
 
 import cn.linzs.app.common.dto.ReturnResult;
-import cn.linzs.app.common.utils.JwtUtil;
+import cn.linzs.app.common.utils.token.ITokenManager;
+import cn.linzs.app.common.utils.token.model.TokenModel;
 import cn.linzs.app.domain.User;
 import cn.linzs.app.service.UserService;
-import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,6 +17,8 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private ITokenManager tokenManager;
 
     @RequestMapping(value = "/api/user/{id}", method = RequestMethod.GET)
     public ReturnResult getUser(@PathVariable("id") Long id) {
@@ -38,8 +39,8 @@ public class UserController {
     public ReturnResult getUserInfo(HttpServletRequest request) {
         ReturnResult result;
         try {
-            Claims claims = (Claims) request.getAttribute("claims");
-            User user = userService.findUserById(Long.valueOf(claims.get("userId").toString()));
+            TokenModel tokenModel = (TokenModel) request.getAttribute("tokenModel");
+            User user = userService.findUserById(Long.valueOf(tokenModel.getDataMap().get("userId").toString()));
             user.setPassword(null);
 
             result = new ReturnResult(ReturnResult.OperationCode.SUCCESS, user);
@@ -64,7 +65,7 @@ public class UserController {
             } else {
                 Map<String, Object> claims = new HashMap<>();
                 claims.put("userId", user.getId());
-                String token = JwtUtil.generateToken(claims);
+                String token = tokenManager.generateToken(claims).getToken();
                 result = new ReturnResult(ReturnResult.OperationCode.SUCCESS, token);
             }
         }

@@ -1,14 +1,19 @@
 package cn.linzs.app.controller;
 
 import cn.linzs.app.common.dto.ReturnResult;
+import cn.linzs.app.common.utils.ShiroUtil;
 import cn.linzs.app.common.utils.token.ITokenManager;
 import cn.linzs.app.common.utils.token.model.TokenModel;
 import cn.linzs.app.domain.User;
 import cn.linzs.app.service.UserService;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,6 +25,7 @@ public class UserController {
     @Autowired
     private ITokenManager tokenManager;
 
+    @RequiresPermissions("sys:user:list")
     @RequestMapping(value = "/api/user/{id}", method = RequestMethod.GET)
     public ReturnResult getUser(@PathVariable("id") Long id) {
         ReturnResult result;
@@ -67,9 +73,24 @@ public class UserController {
                 claims.put("userId", user.getId());
                 String token = tokenManager.generateToken(claims).getToken();
                 result = new ReturnResult(ReturnResult.OperationCode.SUCCESS, token);
+
+                try {
+                    Subject subject = ShiroUtil.getSubject();
+                    UsernamePasswordToken uptoken = new UsernamePasswordToken(account, password);
+                    subject.login(uptoken);
+                } catch (Exception e) {
+                    result = new ReturnResult(ReturnResult.OperationCode.ERROR, "Account or password error.");
+                }
             }
+
         }
 
         return result;
+    }
+
+    @RequestMapping("/401")
+    public ReturnResult _401(HttpServletRequest request, HttpServletResponse response) {
+        response.setStatus(ReturnResult.HttpCode._403);
+        return new ReturnResult(ReturnResult.HttpCode._403, "未授权");
     }
 }

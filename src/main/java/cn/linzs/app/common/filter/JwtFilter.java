@@ -7,8 +7,10 @@ import cn.linzs.app.common.utils.token.JwtUtil;
 import cn.linzs.app.common.utils.token.model.TokenModel;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
+import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -21,34 +23,30 @@ import java.io.IOException;
  * @Date 2017-12-04 9:32
  * @Description 判断JWT Token，如果不对将重定向到登录页面
  */
-@WebFilter(filterName = "jwtFilter", urlPatterns = "/api/*")
-@Order(1)
-public class JwtFilter implements Filter {
+public class JwtFilter extends BasicHttpAuthenticationFilter {
 
-    @Autowired
-    ITokenManager tokenManager;
+    private ITokenManager tokenManager;
 
-    @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
-
+    public void setTokenManager(ITokenManager tokenManager) {
+        this.tokenManager = tokenManager;
     }
 
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        final HttpServletRequest request = (HttpServletRequest) servletRequest;
-        final HttpServletResponse response = (HttpServletResponse) servletResponse;
+    protected boolean onAccessDenied(ServletRequest servletRequest, ServletResponse servletResponse) throws Exception {
+        HttpServletRequest request = (HttpServletRequest) servletRequest;
+        HttpServletResponse response = (HttpServletResponse) servletResponse;
 
         // 预检的请求直接跳过
         if(request.getMethod().equals("OPTIONS")) {
-            response.setStatus(200);
-            return ;
+            response.setStatus(ReturnResult.HttpCode._200);
+            return true;
         }
 
         final String authHeader = request.getHeader("Authorization");
         if(authHeader == null) {
             // 没有Token，重定向到登录页面
             response.setStatus(ReturnResult.HttpCode._401);
-            return ;
+            return false;
         }
 
         final String token = authHeader;
@@ -59,16 +57,12 @@ public class JwtFilter implements Filter {
         } catch (ExpiredTokenException e) {
             // Token过期，重定向到登录页面
             response.setStatus(ReturnResult.HttpCode._401);
-            return ;
+            return false;
         } catch (Exception e) {
             throw new ServletException("Invalid token.");
         }
 
-        filterChain.doFilter(servletRequest, servletResponse);
+        return true;
     }
 
-    @Override
-    public void destroy() {
-
-    }
 }

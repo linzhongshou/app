@@ -31,9 +31,9 @@ public class MainController implements ErrorController {
         }
     }
 
-//    @RequestMapping("/403")
-//    public ReturnResult _403(HttpServletRequest request, HttpServletResponse response) {
-//        return new ReturnResult(ReturnResult.HttpCode._403, "未授权");
-//    }
+    @RequestMapping("/403")
+    public ReturnResult _403(HttpServletRequest request, HttpServletResponse response) {
+        return new ReturnResult(ReturnResult.HttpCode._403, "未授权");
+    }
 
 }

@@ -1,6 +1,5 @@
 package cn.linzs.app.controller;
 
-import cn.linzs.app.common.utils.ShiroUtil;
 import cn.linzs.app.domain.Category;
 import cn.linzs.app.service.CategoryService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;

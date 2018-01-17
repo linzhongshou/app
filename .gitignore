@@ -1,6 +1,7 @@
 *.iml
 mvnw*
 .idea
+.idea/*
 .mvn
 target
 output

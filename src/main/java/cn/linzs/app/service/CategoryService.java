@@ -1,5 +1,6 @@
 package cn.linzs.app.service;
 
+import cn.linzs.app.common.dto.ReturnResult;
 import cn.linzs.app.common.shiro.UserRealm;
 import cn.linzs.app.common.utils.ShiroUtil;
 import cn.linzs.app.domain.Category;
@@ -27,9 +28,9 @@ public class CategoryService {
     @Autowired
     private ICategoryRepo categoryRepo;
 
-    public Page<Category> findByPage(int currPage, int pageSize) {
+    public ReturnResult findByPage(int currPage, int pageSize) {
         Pageable pageable = new PageRequest(currPage, pageSize);
-        return categoryRepo.findAll(pageable);
+        return new ReturnResult(ReturnResult.OperationCode.SUCCESS, categoryRepo.findAll(pageable));
     }
 
 }

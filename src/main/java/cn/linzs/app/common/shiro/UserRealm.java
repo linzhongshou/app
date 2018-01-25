@@ -9,7 +9,6 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.shiro.subject.Subject;
-import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -25,7 +24,7 @@ public class UserRealm extends AuthorizingRealm {
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
         Set<String> permissionsSet = new HashSet<>();
-        permissionsSet.add("sys:category:lists");
+        permissionsSet.add("sys:category:list");
         info.setStringPermissions(permissionsSet);
         System.out.println("授权了。。。");
         return info;

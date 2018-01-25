@@ -1,6 +1,6 @@
 package cn.linzs.app.controller;
 
-import cn.linzs.app.common.utils.ShiroUtil;
+import cn.linzs.app.common.dto.ReturnResult;
 import cn.linzs.app.domain.Category;
 import cn.linzs.app.service.CategoryService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -25,8 +25,8 @@ public class CategoryController {
 
     @RequiresPermissions("sys:category:list")
     @RequestMapping("/categorys")
-    public Page<Category> findByPage(@RequestParam(name = "currPage", defaultValue = "0") int currPage,
-                               @RequestParam(name = "pageSize", defaultValue = "10") int pageSize) {
+    public ReturnResult findByPage(@RequestParam(name = "currPage", defaultValue = "0") int currPage,
+                                   @RequestParam(name = "pageSize", defaultValue = "10") int pageSize) {
         return categoryService.findByPage(currPage, pageSize);
     }
 }

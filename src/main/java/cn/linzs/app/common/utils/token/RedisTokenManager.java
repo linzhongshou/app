@@ -27,7 +27,7 @@ public class RedisTokenManager implements ITokenManager {
 
     @Override
     public TokenModel generateToken(Map<String, Object> dataMap) {
-        String token = JwtUtil.generateToken(dataMap);
+        String token = JwtUtil.generateToken(dataMap, 30);
 
         TokenModel tokenModel = new TokenModel();
         tokenModel.setToken(token);

@@ -2,11 +2,13 @@ package cn.linzs.app.common.filter;
 
 import cn.linzs.app.common.dto.ReturnResult;
 import cn.linzs.app.common.exception.ExpiredTokenException;
+import cn.linzs.app.common.utils.ShiroUtil;
 import cn.linzs.app.common.utils.token.ITokenManager;
 import cn.linzs.app.common.utils.token.JwtUtil;
 import cn.linzs.app.common.utils.token.model.TokenModel;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
+import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
@@ -24,12 +26,6 @@ import java.io.IOException;
  * @Description 判断JWT Token，如果不对将重定向到登录页面
  */
 public class JwtFilter extends BasicHttpAuthenticationFilter {
-
-    private ITokenManager tokenManager;
-
-    public void setTokenManager(ITokenManager tokenManager) {
-        this.tokenManager = tokenManager;
-    }
 
     @Override
     protected boolean onAccessDenied(ServletRequest servletRequest, ServletResponse servletResponse) throws Exception {
@@ -49,12 +45,16 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
             return false;
         }
 
-        final String token = authHeader;
+        final String token = authHeader.replace("Bearer ", "");
         try {
-            tokenManager.refreshToken(token);
-            final TokenModel tokenModel = tokenManager.getTokenModel(token);
-            request.setAttribute("tokenModel", tokenModel);
-        } catch (ExpiredTokenException e) {
+            Claims claims = JwtUtil.getClaimsFromToken(token);
+            request.setAttribute("claims", claims);
+
+            UsernamePasswordToken shiroToken = new UsernamePasswordToken();
+            shiroToken.setUsername(claims.get("userId").toString());
+            shiroToken.setPassword(token.toCharArray());
+            ShiroUtil.getSubject().login(shiroToken);
+        } catch (ExpiredJwtException e) {
             // Token过期，重定向到登录页面
             response.setStatus(ReturnResult.HttpCode._401);
             return false;

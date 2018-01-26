@@ -2,14 +2,12 @@ package cn.linzs.app.controller;
 
 import cn.linzs.app.common.dto.ReturnResult;
 import cn.linzs.app.common.utils.ShiroUtil;
-import cn.linzs.app.common.utils.token.ITokenManager;
 import cn.linzs.app.common.utils.token.JwtUtil;
 import cn.linzs.app.common.utils.token.model.TokenModel;
 import cn.linzs.app.domain.User;
 import cn.linzs.app.service.UserService;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.apache.shiro.mgt.SecurityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,14 +18,11 @@ import java.util.Map;
 @RestController
 public class UserController {
 
+    private final static String SALT = "JKSLFJllkjLSFJSKLDFJ";
+
     @Autowired
     private UserService userService;
-    @Autowired
-    private ITokenManager tokenManager;
-    @Autowired
-    SecurityManager securityManager;
 
-    @RequiresPermissions("sys:user:list")
     @RequestMapping(value = "/api/user/{id}", method = RequestMethod.GET)
     public ReturnResult getUser(@PathVariable("id") Long id) {
         ReturnResult result;
@@ -68,7 +63,7 @@ public class UserController {
             result = new ReturnResult(ReturnResult.OperationCode.ERROR, "Account or password of user can not empty.");
         } else {
             User user = userService.findByAccount(account);
-            if(user == null || !user.getPassword().equals(password)) {
+            if(user == null || !user.getPassword().equals(DigestUtils.md5Hex(password + SALT))) {
                 result = new ReturnResult(ReturnResult.OperationCode.ERROR, "Account or password error.");
             } else {
                 Map<String, Object> tokenMap = new HashMap<>();

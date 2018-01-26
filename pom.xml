@@ -29,6 +29,7 @@
 		<commons-lang3.version>3.7</commons-lang3.version>
 		<fastjson.version>1.2.41</fastjson.version>
         <shiro.version>1.4.0</shiro.version>
+        <apache.commons.codec.version>1.8</apache.commons.codec.version>
 	</properties>
 
 	<dependencies>
@@ -102,6 +103,11 @@
 			<artifactId>fastjson</artifactId>
 			<version>${fastjson.version}</version>
 		</dependency>
+        <dependency>
+            <groupId>org.apache.directory.studio</groupId>
+            <artifactId>org.apache.commons.codec</artifactId>
+            <version>${apache.commons.codec.version}</version>
+        </dependency>
 
 	</dependencies>
 

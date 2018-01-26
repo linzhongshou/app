@@ -1,15 +1,8 @@
 package cn.linzs.app.service;
 
 import cn.linzs.app.common.dto.ReturnResult;
-import cn.linzs.app.common.shiro.UserRealm;
-import cn.linzs.app.common.utils.ShiroUtil;
-import cn.linzs.app.domain.Category;
 import cn.linzs.app.repo.ICategoryRepo;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.mgt.SecurityManager;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;

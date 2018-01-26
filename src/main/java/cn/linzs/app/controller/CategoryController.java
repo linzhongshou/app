@@ -1,16 +1,11 @@
 package cn.linzs.app.controller;
 
 import cn.linzs.app.common.dto.ReturnResult;
-import cn.linzs.app.domain.Category;
 import cn.linzs.app.service.CategoryService;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * @Author linzs
@@ -25,10 +20,9 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
-    @RequiresPermissions("sys:category:list")
     @RequestMapping("/categorys")
     public ReturnResult findByPage(@RequestParam(name = "currPage", defaultValue = "0") int currPage,
-                                   @RequestParam(name = "pageSize", defaultValue = "10") int pageSize, HttpServletResponse response) {
+                                   @RequestParam(name = "pageSize", defaultValue = "10") int pageSize) {
         return categoryService.findByPage(currPage, pageSize);
     }
 }

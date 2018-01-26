@@ -3,6 +3,7 @@ package cn.linzs.app.common.config;
 import cn.linzs.app.common.filter.JwtFilter;
 import cn.linzs.app.common.shiro.UserDefaultSubjectFactory;
 import cn.linzs.app.common.shiro.UserRealm;
+import cn.linzs.app.common.shiro.cache.RedisCacheManager;
 import com.google.common.collect.Maps;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.cache.ehcache.EhCacheManager;
@@ -19,6 +20,7 @@ import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreato
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.data.redis.core.RedisTemplate;
 
 import javax.servlet.Filter;
 import java.util.LinkedHashMap;
@@ -39,8 +41,14 @@ public class ShiroConfig {
         return em;
     }
 
+    @Bean(name = "redisManager")
+    public RedisCacheManager getRedisCacheManager(RedisTemplate redisTemplate) {
+        RedisCacheManager cacheManager = new RedisCacheManager(redisTemplate);
+        return cacheManager;
+    }
+
     @Bean(name = "userRealm")
-    public UserRealm getUserRealm(EhCacheManager cacheManager) {
+    public UserRealm getUserRealm(RedisCacheManager cacheManager) {
         UserRealm realm = new UserRealm();
 //        realm.setCachingEnabled(false);
         realm.setCacheManager(cacheManager);

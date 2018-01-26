@@ -24,8 +24,9 @@ public class UserRealm extends AuthorizingRealm {
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
         Set<String> permissionsSet = new HashSet<>();
-        permissionsSet.add("sys:category:lists");
+        permissionsSet.add("sys:category:list");
         info.setStringPermissions(permissionsSet);
+        System.out.println("授权了");
         return info;
     }
 

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @Author linzs
@@ -23,7 +24,6 @@ public class GlobalExceptionHandler {
 
     // 自定义业务异常处理
     @ExceptionHandler(value = BaseException.class)
-    @ResponseBody
     public Object baseErrorHandler(HttpServletRequest req, Exception e) throws Exception {
         logger.error("---BaseException Handler---Host {} invokes url {} ERROR: {}", req.getRemoteHost(), req.getRequestURL(), e.getMessage());
         ReturnResult result = new ReturnResult(ReturnResult.OperationCode.EXCEPTION, e.getMessage());
@@ -32,10 +32,14 @@ public class GlobalExceptionHandler {
 
     // 不可预料异常处理
     @ExceptionHandler(value = Exception.class)
-    @ResponseBody
-    public Object defaultErrorHandler(HttpServletRequest req, Exception e) throws Exception {
+    public Object defaultErrorHandler(HttpServletRequest req, HttpServletResponse res, Exception e) throws Exception {
         logger.error("---DefaultException Handler---Host {} invokes url {} ERROR: {}", req.getRemoteHost(), req.getRequestURL(), e.getMessage());
         ReturnResult result = new ReturnResult(ReturnResult.OperationCode.EXCEPTION, e.getLocalizedMessage());
+        if(e instanceof org.apache.shiro.authz.AuthorizationException) {
+            res.setStatus(HttpServletResponse.SC_FORBIDDEN);
+        } else if(res.getStatus() == HttpServletResponse.SC_OK) {
+            res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        }
         return result;
     }
 }

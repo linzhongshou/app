@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * @Author linzs
  * @Date 2017-12-05 11:48
@@ -26,7 +28,7 @@ public class CategoryController {
     @RequiresPermissions("sys:category:list")
     @RequestMapping("/categorys")
     public ReturnResult findByPage(@RequestParam(name = "currPage", defaultValue = "0") int currPage,
-                                   @RequestParam(name = "pageSize", defaultValue = "10") int pageSize) {
+                                   @RequestParam(name = "pageSize", defaultValue = "10") int pageSize, HttpServletResponse response) {
         return categoryService.findByPage(currPage, pageSize);
     }
 }

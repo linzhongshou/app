@@ -1,11 +1,11 @@
 package cn.linzs.app.controller;
 
 import cn.linzs.app.common.dto.ReturnResult;
-import cn.linzs.app.common.utils.ShiroUtil;
 import cn.linzs.app.common.utils.JwtUtil;
-import cn.linzs.app.common.utils.token.model.TokenModel;
+import cn.linzs.app.common.utils.ShiroUtil;
 import cn.linzs.app.domain.User;
 import cn.linzs.app.service.UserService;
+import io.jsonwebtoken.Claims;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,8 +42,8 @@ public class UserController {
     public ReturnResult getUserInfo(HttpServletRequest request) {
         ReturnResult result;
         try {
-            TokenModel tokenModel = (TokenModel) request.getAttribute("tokenModel");
-            User user = userService.findUserById(Long.valueOf(tokenModel.getDataMap().get("userId").toString()));
+            Claims claims = (Claims) request.getAttribute("claims");
+            User user = userService.findUserById(Long.valueOf(claims.get("userId").toString()));
             user.setPassword(null);
 
             result = new ReturnResult(ReturnResult.OperationCode.SUCCESS, user);

@@ -2,12 +2,10 @@ package cn.linzs.app.controller;
 
 import cn.linzs.app.common.dto.ReturnResult;
 import cn.linzs.app.common.exception.ExpiredTokenException;
-import cn.linzs.app.common.utils.token.JwtUtil;
+import cn.linzs.app.common.utils.JwtUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;

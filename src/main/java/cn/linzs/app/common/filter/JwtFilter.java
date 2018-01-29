@@ -2,7 +2,7 @@ package cn.linzs.app.common.filter;
 
 import cn.linzs.app.common.dto.ReturnResult;
 import cn.linzs.app.common.utils.ShiroUtil;
-import cn.linzs.app.common.utils.token.JwtUtil;
+import cn.linzs.app.common.utils.JwtUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.apache.shiro.authc.UsernamePasswordToken;

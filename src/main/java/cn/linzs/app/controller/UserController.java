@@ -2,7 +2,7 @@ package cn.linzs.app.controller;
 
 import cn.linzs.app.common.dto.ReturnResult;
 import cn.linzs.app.common.utils.ShiroUtil;
-import cn.linzs.app.common.utils.token.JwtUtil;
+import cn.linzs.app.common.utils.JwtUtil;
 import cn.linzs.app.common.utils.token.model.TokenModel;
 import cn.linzs.app.domain.User;
 import cn.linzs.app.service.UserService;

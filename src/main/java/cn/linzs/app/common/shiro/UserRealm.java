@@ -26,7 +26,6 @@ public class UserRealm extends AuthorizingRealm {
         Set<String> permissionsSet = new HashSet<>();
         permissionsSet.add("sys:category:list");
         info.setStringPermissions(permissionsSet);
-        System.out.println("授权了");
         return info;
     }
 

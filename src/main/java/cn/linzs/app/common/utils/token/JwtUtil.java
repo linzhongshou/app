@@ -40,9 +40,9 @@ public final class JwtUtil {
         Claims claims = null;
         try {
             claims = Jwts.parser()
-                        .setSigningKey(secret)
-                        .parseClaimsJws(token)
-                        .getBody();
+                    .setSigningKey(secret)
+                    .parseClaimsJws(token)
+                    .getBody();
         } catch (ExpiredJwtException e) {
             logger.error("Get claims from token error. error information: " + e.getLocalizedMessage());
             throw e;

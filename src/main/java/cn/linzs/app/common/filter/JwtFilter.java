@@ -13,6 +13,8 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @Author linzs
@@ -39,16 +41,23 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
             return false;
         }
 
-        final String token = authHeader.replace("Bearer ", "");
+        String[] tokens = authHeader.split("refreshToken");
+        final String accessToken = tokens[0].replace("Bearer ", "").trim();
+        final String refreshToken = tokens[1].trim();
         try {
-            Claims claims = JwtUtil.getClaimsFromToken(token);
-            request.setAttribute("claims", claims);
-
-            UsernamePasswordToken shiroToken = new UsernamePasswordToken();
-            shiroToken.setUsername(claims.get("userId").toString());
-            shiroToken.setPassword(token.toCharArray());
-            ShiroUtil.getSubject().login(shiroToken);
+            parseToken(accessToken, request);
         } catch (ExpiredJwtException e) {
+            if(refreshToken != null) { // 如果有refreshToken且没过期，则颁发新的Token给用户
+                try {
+                    Claims claims = parseToken(refreshToken, request);
+                    Map<String, Object> claimsMap = new HashMap<>();
+                    claimsMap.put("userId", claims.get("userId"));
+                    response.setHeader("access-token", JwtUtil.generateToken(claimsMap, 30));
+                    response.setHeader("refresh-token", JwtUtil.generateToken(claimsMap, 60));
+                    return true;
+                } catch (Exception ex) { }
+            }
+
             // Token过期，重定向到登录页面
             response.setStatus(ReturnResult.HttpCode._401);
             return false;
@@ -57,6 +66,18 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
         }
 
         return true;
+    }
+
+    private Claims parseToken(String token, HttpServletRequest request) throws ExpiredJwtException, Exception {
+        Claims claims = JwtUtil.getClaimsFromToken(token);
+        request.setAttribute("claims", claims);
+
+        UsernamePasswordToken shiroToken = new UsernamePasswordToken();
+        shiroToken.setUsername(claims.get("userId").toString());
+        shiroToken.setPassword(token.toCharArray());
+        ShiroUtil.getSubject().login(shiroToken);
+
+        return claims;
     }
 
 }

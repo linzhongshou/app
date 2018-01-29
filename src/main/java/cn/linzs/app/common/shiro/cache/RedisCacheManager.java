@@ -28,8 +28,6 @@ public class RedisCacheManager implements CacheManager {
 
     @Override
     public <K, V> Cache<K, V> getCache(String s) throws CacheException {
-        logger.info("获取Shiro缓存实例，缓存名：" + s);
-
         Cache cache = cacheMap.get(s);
         if(cache == null) {
             cache = new RedisCache(redisTemplate);

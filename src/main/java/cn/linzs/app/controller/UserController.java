@@ -70,7 +70,7 @@ public class UserController {
                 Map<String, Object> claims = new HashMap<>();
                 claims.put("userId", user.getId());
                 tokenMap.put("accessToken", JwtUtil.generateToken(claims, 30));
-                tokenMap.put("refreshToken", JwtUtil.generateToken(new HashMap<>(), 60));
+                tokenMap.put("refreshToken", JwtUtil.generateToken(claims, 60));
 
                 result = new ReturnResult(ReturnResult.OperationCode.SUCCESS, tokenMap);
                 try {

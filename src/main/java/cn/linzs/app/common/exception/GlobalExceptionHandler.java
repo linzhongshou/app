@@ -3,6 +3,7 @@ package cn.linzs.app.common.exception;
 import cn.linzs.app.common.dto.ReturnResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,10 +21,16 @@ import javax.servlet.http.HttpServletResponse;
 public class GlobalExceptionHandler {
 
     private Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+    @Value("${debug.mode}")
+    private boolean debugMode;
 
     // 自定义业务异常处理
     @ExceptionHandler(value = BaseException.class)
     public Object baseErrorHandler(HttpServletRequest req, Exception e) throws Exception {
+        if(debugMode) {
+            e.printStackTrace();
+        }
+
         logger.error("---BaseException Handler---Host {} invokes url {} ERROR: {}", req.getRemoteHost(), req.getRequestURL(), e.getMessage());
         ReturnResult result = new ReturnResult(ReturnResult.OperationCode.EXCEPTION, e.getMessage());
         return result;
@@ -32,6 +39,10 @@ public class GlobalExceptionHandler {
     // 不可预料异常处理
     @ExceptionHandler(value = Exception.class)
     public Object defaultErrorHandler(HttpServletRequest req, HttpServletResponse res, Exception e) throws Exception {
+        if(debugMode) {
+            e.printStackTrace();
+        }
+
         logger.error("---DefaultException Handler---Host {} invokes url {} ERROR: {}", req.getRemoteHost(), req.getRequestURL(), e.getMessage());
         ReturnResult result = new ReturnResult(ReturnResult.OperationCode.EXCEPTION, e.getLocalizedMessage());
         if(e instanceof org.apache.shiro.authz.AuthorizationException) {

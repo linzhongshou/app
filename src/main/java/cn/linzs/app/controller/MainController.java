@@ -21,7 +21,7 @@ import java.util.Map;
 @RestController
 public class MainController {
 
-    @RequestMapping(value = "/refreshToken")
+    @RequestMapping(value = "/api/refreshToken")
     public ReturnResult refreshToken(HttpServletRequest request, HttpServletResponse response) {
         ReturnResult result = null;
         String refreshToken = request.getParameter("refreshToken");

@@ -34,6 +34,10 @@ public class Article extends BaseEntity {
     private Date createDate;
     private Date updateDate;
 
+    @ManyToOne
+    @JoinColumn(name = "categoryId", referencedColumnName = "id", insertable = false, updatable = false)
+    private Category category;
+
     public Long getId() {
         return id;
     }
@@ -136,5 +140,13 @@ public class Article extends BaseEntity {
 
     public void setUpdateDate(Date updateDate) {
         this.updateDate = updateDate;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 }

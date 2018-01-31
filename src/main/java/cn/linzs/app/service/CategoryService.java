@@ -33,6 +33,10 @@ public class CategoryService {
         return new ReturnResult(ReturnResult.OperationCode.SUCCESS, categoryRepo.findAll(pageable));
     }
 
+    public ReturnResult findAll() {
+        return new ReturnResult(ReturnResult.OperationCode.SUCCESS, categoryRepo.findAll());
+    }
+
     public ReturnResult save(Category category) {
         if (categoryRepo.countByNameAndIdNot(category.getName(), category.getId() == null ? -1 : category.getId()) <= 0) {
             if (category.getId() == null) {

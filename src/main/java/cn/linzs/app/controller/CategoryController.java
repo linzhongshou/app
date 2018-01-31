@@ -5,14 +5,9 @@ import cn.linzs.app.domain.Category;
 import cn.linzs.app.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,32 +18,34 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api")
-public class CategoryController {
+public class CategoryController extends BaseController {
 
     @Autowired
     private CategoryService categoryService;
 
     @RequestMapping("/category/categorys")
-    public ReturnResult findByPage(@RequestParam(name = "currPage", defaultValue = "0") int currPage,
+    public ReturnResult getCategoryPage(@RequestParam(name = "currPage", defaultValue = "1") int currPage,
                                    @RequestParam(name = "pageSize", defaultValue = "10") int pageSize) {
         return categoryService.findByPage(currPage, pageSize);
     }
 
+    @RequestMapping("/category/all")
+    public ReturnResult getAllCategory() {
+        return categoryService.findAll();
+    }
+
     @RequestMapping(value = "/category", method = RequestMethod.POST)
     public ReturnResult save(@Valid Category category, BindingResult bindingResult) {
-        if(!bindingResult.hasErrors()) {
+        List<String> errorMessageList = parseBindingResult(bindingResult);
+        if(errorMessageList == null) {
             return categoryService.save(category);
         } else {
-            List<String> errorMessageList = new ArrayList<>();
-            for(ObjectError objectError : bindingResult.getAllErrors()) {
-                errorMessageList.add(objectError.getDefaultMessage());
-            }
             return new ReturnResult(ReturnResult.OperationCode.ERROR, errorMessageList);
         }
     }
 
-    @RequestMapping(value = "/category", method = RequestMethod.DELETE)
-    public ReturnResult save(@RequestParam Long id) {
+    @RequestMapping(value = "/category/{id}", method = RequestMethod.DELETE)
+    public ReturnResult save(@PathVariable("id") Long id) {
         return categoryService.delete(id);
     }
 }

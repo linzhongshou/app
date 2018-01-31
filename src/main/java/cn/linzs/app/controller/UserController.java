@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
+@RequestMapping("/api")
 public class UserController {
 
     private final static String SALT = "JKSLFJllkjLSFJSKLDFJ";
@@ -23,7 +24,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @RequestMapping(value = "/api/user/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/user/{id}", method = RequestMethod.GET)
     public ReturnResult getUser(@PathVariable("id") Long id) {
         ReturnResult result;
         try {
@@ -38,7 +39,7 @@ public class UserController {
         return result;
     }
 
-    @RequestMapping(value = "/api/user/userinfo", method = RequestMethod.GET)
+    @RequestMapping(value = "/user/userinfo", method = RequestMethod.GET)
     public ReturnResult getUserInfo(HttpServletRequest request) {
         ReturnResult result;
         try {

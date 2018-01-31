@@ -100,10 +100,10 @@ public class ShiroConfig {
     private void loadShiroFilterChain(ShiroFilterFactoryBean shiroFilterFactoryBean){
         Map<String, String> filterChainDefinitionMap = new LinkedHashMap<String, String>();
         // anon：它对应的过滤器里面是空的,什么都没做
-        filterChainDefinitionMap.put("/user/validUser", "anon");
-        filterChainDefinitionMap.put("/refreshToken", "anon");
+        filterChainDefinitionMap.put("/api/user/validUser", "anon");
+        filterChainDefinitionMap.put("/api/refreshToken", "anon");
         // authc：该过滤器下的页面必须验证后才能访问
-        filterChainDefinitionMap.put("/**", "authc");
+        filterChainDefinitionMap.put("/api/**", "authc");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
 
 

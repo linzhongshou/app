@@ -29,6 +29,10 @@ public class ArticleService {
         return new ReturnResult(ReturnResult.OperationCode.SUCCESS, articleRepo.findAll(pageable));
     }
 
+    public ReturnResult findById(Long id) {
+        return new ReturnResult(ReturnResult.OperationCode.SUCCESS, articleRepo.findOne(id));
+    }
+
     public ReturnResult save(Article article) {
         Date now = new Date();
         if(article.getId() == null) {

@@ -27,6 +27,14 @@ public class ArticleController extends BaseController {
         return articleService.findByPage(currPage, pageSize);
     }
 
+    @RequestMapping(value = "/article/{id}", method = RequestMethod.GET)
+    public ReturnResult getArticle(@PathVariable Long id) {
+        if(id == null || id <= 0) {
+            return new ReturnResult(ReturnResult.OperationCode.ERROR, "param of id is incorrect.");
+        }
+        return articleService.findById(id);
+    }
+
     @RequestMapping(value = "/api/article", method = RequestMethod.POST)
     public ReturnResult save(@Valid Article article, BindingResult bindingResult) {
         List<String> errorMessageList = parseBindingResult(bindingResult);

@@ -58,7 +58,7 @@ public class CategoryService {
     public ReturnResult delete(Long id) {
         if(id != null) {
             if(articleRepo.countByCategoryId(id) > 0) {
-                return new ReturnResult(ReturnResult.OperationCode.SUCCESS, "目录下已有博客文章关联，无法删除");
+                return new ReturnResult(ReturnResult.OperationCode.ERROR, "目录下已有博客文章关联，无法删除");
             } else {
                 categoryRepo.delete(id);
                 return new ReturnResult(ReturnResult.OperationCode.SUCCESS, null);

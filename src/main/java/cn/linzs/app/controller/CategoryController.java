@@ -17,13 +17,12 @@ import java.util.List;
  */
 
 @RestController
-@RequestMapping(value = "/api")
 public class CategoryController extends BaseController {
 
     @Autowired
     private CategoryService categoryService;
 
-    @RequestMapping("/category/categorys")
+    @RequestMapping("/api/category/categorys")
     public ReturnResult getCategoryPage(@RequestParam(name = "currPage", defaultValue = "1") int currPage,
                                    @RequestParam(name = "pageSize", defaultValue = "10") int pageSize) {
         return categoryService.findByPage(currPage, pageSize);
@@ -34,7 +33,7 @@ public class CategoryController extends BaseController {
         return categoryService.findAll();
     }
 
-    @RequestMapping(value = "/category", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/category", method = RequestMethod.POST)
     public ReturnResult save(@Valid Category category, BindingResult bindingResult) {
         List<String> errorMessageList = parseBindingResult(bindingResult);
         if(errorMessageList == null) {
@@ -44,7 +43,7 @@ public class CategoryController extends BaseController {
         }
     }
 
-    @RequestMapping(value = "/category/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/api/category/{id}", method = RequestMethod.DELETE)
     public ReturnResult save(@PathVariable("id") Long id) {
         return categoryService.delete(id);
     }

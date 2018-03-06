@@ -22,9 +22,10 @@ public class ArticleController extends BaseController {
     private ArticleService articleService;
 
     @RequestMapping(value = "/article/articles")
-    public ReturnResult getArticlePage(@RequestParam(name = "currPage", defaultValue = "1") int currPage,
+    public ReturnResult getArticlePage(@RequestParam(required = false) Long categoryId,
+                                       @RequestParam(name = "currPage", defaultValue = "1") int currPage,
                                        @RequestParam(name = "pageSize", defaultValue = "10") int pageSize) {
-        return articleService.findByPage(currPage, pageSize);
+        return articleService.findByPage(categoryId, currPage, pageSize);
     }
 
     @RequestMapping(value = "/article/{id}", method = RequestMethod.GET)

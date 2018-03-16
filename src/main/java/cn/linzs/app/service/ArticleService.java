@@ -3,6 +3,7 @@ package cn.linzs.app.service;
 import cn.linzs.app.common.dto.ReturnResult;
 import cn.linzs.app.domain.Article;
 import cn.linzs.app.repo.IArticleRepo;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -27,16 +28,24 @@ public class ArticleService {
     @Autowired
     private IArticleRepo articleRepo;
 
-    public ReturnResult findByPage(Long categroyId, int currPage, int pageSize) {
+    public ReturnResult findByPage(Long categroyId, String searchContent, int currPage, int pageSize) {
         Pageable pageable = new PageRequest(currPage - 1, pageSize);
         return new ReturnResult(ReturnResult.OperationCode.SUCCESS, articleRepo.findAll(new Specification<Article>() {
             @Override
             public Predicate toPredicate(Root<Article> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
                 Path<Long> categoryIdPath = root.get("categoryId");
+                Path<String> titlePath = root.get("title");
+                Path<String> contentPath = root.get("content");
                 List<Predicate> predicateList = new ArrayList<>();
 
                 if(categroyId != null) {
                     predicateList.add(criteriaBuilder.equal(categoryIdPath, categroyId));
+                }
+                if(!StringUtils.isEmpty(searchContent)) {
+                    String content = "%" + searchContent + "%";
+                    predicateList.add(criteriaBuilder.or(
+                            criteriaBuilder.like(titlePath, content),
+                            criteriaBuilder.like(contentPath, content) ));
                 }
 
                 criteriaQuery.where(predicateList.toArray(new Predicate[predicateList.size()]));

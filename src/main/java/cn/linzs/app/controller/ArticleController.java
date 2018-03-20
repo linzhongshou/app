@@ -29,12 +29,20 @@ public class ArticleController extends BaseController {
         return articleService.findByPage(categoryId, searchContent, currPage, pageSize);
     }
 
-    @RequestMapping(value = "/article/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "api/article/{id}", method = RequestMethod.GET)
     public ReturnResult getArticle(@PathVariable Long id) {
         if(id == null || id <= 0) {
             return new ReturnResult(ReturnResult.OperationCode.ERROR, "param of id is incorrect.");
         }
         return articleService.findById(id);
+    }
+
+    @RequestMapping(value = "/article/{id}", method = RequestMethod.GET)
+    public ReturnResult getArticleForFrontend(@PathVariable Long id) {
+        if(id == null || id <= 0) {
+            return new ReturnResult(ReturnResult.OperationCode.ERROR, "param of id is incorrect.");
+        }
+        return articleService.getArticle(id);
     }
 
     @RequestMapping(value = "/api/article", method = RequestMethod.POST)

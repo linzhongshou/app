@@ -12,9 +12,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.*;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @Author linzs
@@ -56,6 +54,14 @@ public class ArticleService {
 
     public ReturnResult findById(Long id) {
         return new ReturnResult(ReturnResult.OperationCode.SUCCESS, articleRepo.findOne(id));
+    }
+
+    public ReturnResult getArticle(Long id) {
+        Map<String, Object> dataMap = new HashMap<>();
+        dataMap.put("article", articleRepo.findOne(id));
+        dataMap.put("prev", articleRepo.findOne(id - 1));
+        dataMap.put("next", articleRepo.findOne(id + 1));
+        return new ReturnResult(ReturnResult.OperationCode.SUCCESS, dataMap);
     }
 
     public ReturnResult save(Article article) {
